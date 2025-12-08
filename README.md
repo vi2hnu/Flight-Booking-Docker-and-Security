@@ -30,7 +30,7 @@
 
 ## API Endpoints
 
-|| Method | Endpoint | Description |
+| Method | Endpoint | Description |
 |--------|---------|-------------|
 | POST   | /api/flight/airline/inventory | Add inventory/schedule for an existing airline |
 | POST   | /api/flight/search | Search for available flights |
@@ -50,6 +50,7 @@
 <img width="1919" height="820" alt="Image" src="https://github.com/user-attachments/assets/0b2be17e-046c-4051-ab29-741a6d5d452c" />
 (note: docker logs can be found in main root directory)
 ---
+
 ## Reports:
 ### SonarQube Report
 (note: sonarqube link for each service has been provided in REPORT.docx)
