@@ -1,0 +1,157 @@
+services:
+  eureka:
+    build: ./ServiceRegistry
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - dockerNet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  configserver:
+    build: ./ConfigServer
+    container_name: configserver
+    ports:
+      - "8888:8888"
+    depends_on:
+      eureka:
+        condition: service_healthy
+    networks:
+      - dockerNet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  kafkaQueue:
+    image: apache/kafka:4.1.1
+    container_name: kafkaQueue
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafkaQueue:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafkaQueue:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    depends_on:
+      configserver:
+        condition: service_healthy
+    networks:
+      - dockerNet
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    depends_on:
+      - kafkaQueue
+    networks:
+      - dockerNet
+
+  sql_db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_db
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlvolume:/var/opt/mssql
+    environment:
+      MSSQL_SA_PASSWORD: "Vishnu1606"
+      ACCEPT_EULA: "Y"
+    depends_on:
+      - redis
+    networks:
+      - dockerNet
+
+  flightservice:
+    build: ./FlightService
+    container_name: flightservice
+    ports:
+      - "8080:8080"
+    depends_on:
+      sql_db:
+        condition: service_started
+      kafkaQueue:
+        condition: service_started
+      eureka:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    networks:
+      - dockerNet
+
+  bookingservice:
+    build: ./BookingService
+    container_name: bookingservice
+    ports:
+      - "8081:8081"
+    depends_on:
+      sql_db:
+        condition: service_started
+      kafkaQueue:
+        condition: service_started
+      eureka:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    networks:
+      - dockerNet
+
+  emailservice:
+    build: ./EmailService
+    container_name: emailservice
+    ports:
+      - "8082:8082"
+    depends_on:
+      sql_db:
+        condition: service_started
+      kafkaQueue:
+        condition: service_started
+      bookingservice:
+        condition: service_started
+      flightservice:
+        condition: service_started
+      configserver:
+        condition: service_healthy
+    networks:
+      - dockerNet
+
+  apigateway:
+    build: ./ApiGateway
+    container_name: apigateway
+    ports:
+      - "9000:9000"
+    depends_on:
+      flightservice:
+        condition: service_started
+      bookingservice:
+        condition: service_started
+      emailservice:
+        condition: service_started
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+    networks:
+      - dockerNet
+
+volumes:
+  sqlvolume:
+    external: true
+
+networks:
+  dockerNet:
+    driver: bridge
