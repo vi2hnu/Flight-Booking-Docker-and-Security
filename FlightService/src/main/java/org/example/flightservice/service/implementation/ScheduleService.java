@@ -54,6 +54,10 @@ public class ScheduleService implements ScheduleInterface {
     @Override
     public boolean reserveSeats(Long scheduleId, SeatsDTO seatsDTO) {
         Schedule schedule = scheduleRepository.findScheduleById(scheduleId);
+        if(schedule==null){
+            log.error("Schedule not found");
+            throw new ScheduleNotFoundException("Schedule not found");
+        }
         String seats = seatsDTO.seats().toString();
         String lockKey = scheduleId.toString()+seats; // 5[12A.12b]
         RLock lock =  redissonClient.getLock(lockKey);

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 
 import java.util.List;
 
@@ -25,6 +27,12 @@ class ScheduleTest {
 
     @Mock
     private BookedSeatsRepository bookedSeatsRepository;
+
+    @Mock
+    private RedissonClient redissonClient;  // ADD THIS
+
+    @Mock
+    private RLock rLock;  // ADD THIS
 
     @InjectMocks
     private ScheduleService scheduleService;
@@ -66,9 +74,13 @@ class ScheduleTest {
         SeatsDTO seatsDTO = new SeatsDTO(List.of("1A"));
 
         when(scheduleRepository.findScheduleById(1L)).thenReturn(schedule);
+        when(redissonClient.getLock(anyString())).thenReturn(rLock);
+        when(rLock.tryLock()).thenReturn(true);
+
         scheduleService.reserveSeats(1L, seatsDTO);
 
         verify(bookedSeatsRepository, times(1)).save(any());
+        verify(rLock, times(1)).unlock();
     }
 
     @Test
