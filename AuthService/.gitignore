@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+src/main/java/org/example/authservice/controllers/TestController.java
+
 ### STS ###
 .apt_generated
 .classpath
