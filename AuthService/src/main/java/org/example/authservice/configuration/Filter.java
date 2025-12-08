@@ -1,4 +1,4 @@
-package org.example.authservice.Configuration;
+package org.example.authservice.configuration;
 
 import org.example.authservice.service.jwt.AuthEntryPointJwt;
 import org.example.authservice.service.jwt.AuthTokenFilter;

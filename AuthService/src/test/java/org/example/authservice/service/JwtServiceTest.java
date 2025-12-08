@@ -2,13 +2,13 @@ package org.example.authservice.service;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.authservice.service.jwt.AuthEntryPointJwt;
 import org.example.authservice.service.jwt.AuthTokenFilter;
 import org.example.authservice.service.jwt.JwtUtils;
-import org.example.authservice.service.user.UserDetailsImpl;
 import org.example.authservice.service.user.UserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,15 +16,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -51,29 +52,53 @@ class JwtServiceTest {
 
     @BeforeEach
     void setup() {
+        // Clear security context before each test
+        SecurityContextHolder.clearContext();
+
         jwtUtils = new JwtUtils(userDetailsService);
-        jwtUtils.jwtSecret = "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWI=";
-        jwtUtils.jwtExpirationMs = 3600000;
-        jwtUtils.jwtCookie = "jwt";
+
+        // Use ReflectionTestUtils to set private fields
+        ReflectionTestUtils.setField(jwtUtils, "jwtSecret", "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWI=");
+        ReflectionTestUtils.setField(jwtUtils, "jwtExpirationMs", 3600000L);
+        ReflectionTestUtils.setField(jwtUtils, "jwtCookie", "jwt");
     }
 
     @Test
     void authEntryPointJwt_writesUnauthorizedJson() throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ServletOutputStream servletOutputStream = new ServletOutputStream() {
-            @Override public void write(int b) throws IOException { outputStream.write(b); }
+            @Override
+            public void write(int b) throws IOException {
+                outputStream.write(b);
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
+            }
         };
 
         when(response.getOutputStream()).thenReturn(servletOutputStream);
         when(request.getServletPath()).thenReturn("/test");
 
-        authEntryPointJwt.commence(request, response, new RuntimeException("Invalid"));
+        // Create a proper AuthenticationException
+        org.springframework.security.core.AuthenticationException authException =
+                new org.springframework.security.authentication.BadCredentialsException("Invalid");
+
+        authEntryPointJwt.commence(request, response, authException);
 
         String json = outputStream.toString();
         assertTrue(json.contains("\"status\":401"));
         assertTrue(json.contains("\"error\":\"Unauthorized\""));
         assertTrue(json.contains("\"message\":\"Invalid\""));
         assertTrue(json.contains("\"path\":\"/test\""));
+
+        verify(response).setContentType("application/json");
+        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     @Test
@@ -84,20 +109,49 @@ class JwtServiceTest {
 
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
 
-        UserDetails details = User.withUsername("user1").password("x").authorities("ROLE_USER").build();
+        UserDetails details = User.withUsername("user1")
+                .password("x")
+                .authorities("ROLE_USER")
+                .build();
         when(userDetailsService.loadUserByUsername("user1")).thenReturn(details);
 
         filter.doFilterInternal(request, response, filterChain);
 
-        assertEquals("user1",
-                org.springframework.security.core.context.SecurityContextHolder.getContext()
-                        .getAuthentication().getName()
-        );
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        assertNotNull(authentication);
+        assertEquals("user1", authentication.getName());
+
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void authTokenFilter_continuesFilterChainWhenNoToken() throws Exception {
+        AuthTokenFilter filter = new AuthTokenFilter(jwtUtils, userDetailsService);
+
+        when(request.getHeader("Authorization")).thenReturn(null);
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
+        verify(filterChain).doFilter(request, response);
+    }
+
+    @Test
+    void authTokenFilter_continuesFilterChainOnInvalidToken() throws Exception {
+        AuthTokenFilter filter = new AuthTokenFilter(jwtUtils, userDetailsService);
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer invalid_token");
+
+        filter.doFilterInternal(request, response, filterChain);
+
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
+        verify(filterChain).doFilter(request, response);
     }
 
     @Test
     void jwtUtils_generatesValidToken() {
         String token = jwtUtils.generateTokenFromUsername("vishnu");
+
         assertNotNull(token);
         assertTrue(jwtUtils.validateJwtToken(token));
         assertEquals("vishnu", jwtUtils.getUserNameFromJwtToken(token));
@@ -107,27 +161,53 @@ class JwtServiceTest {
     void jwtUtils_getJwtFromCookies_success() {
         Cookie cookie = new Cookie("jwt", "abc123");
         when(request.getCookies()).thenReturn(new Cookie[]{cookie});
+
         assertEquals("abc123", jwtUtils.getJwtFromCookies(request));
     }
 
     @Test
     void jwtUtils_getJwtFromCookies_nullIfMissing() {
         when(request.getCookies()).thenReturn(null);
+
+        assertNull(jwtUtils.getJwtFromCookies(request));
+    }
+
+    @Test
+    void jwtUtils_getJwtFromCookies_nullIfWrongCookieName() {
+        Cookie cookie = new Cookie("other_cookie", "abc123");
+        when(request.getCookies()).thenReturn(new Cookie[]{cookie});
+
         assertNull(jwtUtils.getJwtFromCookies(request));
     }
 
     @Test
     void jwtUtils_rejectsExpiredToken() {
+        String jwtSecret = "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWI=";
+
         String expired = io.jsonwebtoken.Jwts.builder()
                 .setSubject("abc")
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(Instant.now().minusSeconds(5)))
                 .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(
-                        java.util.Base64.getDecoder().decode(jwtUtils.jwtSecret)
+                        java.util.Base64.getDecoder().decode(jwtSecret)
                 ), io.jsonwebtoken.SignatureAlgorithm.HS256)
                 .compact();
 
         assertFalse(jwtUtils.validateJwtToken(expired));
     }
-}
 
+    @Test
+    void jwtUtils_rejectsMalformedToken() {
+        assertFalse(jwtUtils.validateJwtToken("not.a.valid.token"));
+    }
+
+    @Test
+    void jwtUtils_rejectsEmptyToken() {
+        assertFalse(jwtUtils.validateJwtToken(""));
+    }
+
+    @Test
+    void jwtUtils_rejectsNullToken() {
+        assertFalse(jwtUtils.validateJwtToken(null));
+    }
+}
