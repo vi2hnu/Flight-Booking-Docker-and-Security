@@ -11,7 +11,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
-public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFactory<AuthenticationGatewayFilterFactory.Config> {
+public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
     @Autowired
     private RouteValidator validator;
@@ -19,7 +19,7 @@ public class AuthenticationGatewayFilterFactory extends AbstractGatewayFilterFac
     @Autowired
     private JwtUtils jwtUtil;
 
-    public AuthenticationGatewayFilterFactory() {
+    public AuthenticationFilter() {
         super(Config.class);
     }
 
