@@ -129,6 +129,21 @@ services:
     networks:
       - dockerNet
 
+  authservice:
+    build: ./AuthService
+    container_name: authservice
+    ports:
+      - "9091:9091"
+    depends_on:
+      sql_db:
+        condition: service_started
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+    networks:
+      - dockerNet
+
   apigateway:
     build: ./ApiGateway
     container_name: apigateway
