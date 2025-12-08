@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "d7214c82-4974-4231-a2f3-0ba9797796ca",
+		"name": "Chubb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36929863"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "singin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"roy\",\n    \"email\":  \"roy@gmail.com\",\n    \"password\": \"TheStrongestPassword1222231321@@@@\"\n//   \"role\": [\"ROLE_USER\"]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/authservice/api/auth/signin"
+					},
+					"response": []
+				},
+				{
+					"name": "singup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"username\": \"1ookokek\",\n    \"email\":  \"1oke@gmail.com\",\n    \"password\": \"TheStrongestPassword1222231321@@@@\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/authservice/api/auth/signup"
+					},
+					"response": []
+				},
+				{
+					"name": "signout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"vishnfu77varadhankr\",\n  \"password\": \"TheStrongestPassword1222231321@@@@\"\n//   \"role\": [\"ROLE_USER\"]\n}\n"
+						},
+						"url": "http://localhost:9000/authservice/api/auth/signout"
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"vishnfu77varadhankr\",\n  \"password\": \"TheStrongestPassword1222231321@@@@\"\n//   \"role\": [\"ROLE_USER\"]\n}\n"
+						},
+						"url": "http://localhost:9000/authservice/api/test/user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Flight Service",
+			"item": [
+				{
+					"name": "Add flight schedule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"flightId\":4,\n  \"fromCityId\": 4,\n  \"toCityId\": 2,\n  \"departureDate\": \"2027-07-18\",\n  \"departureTime\": \"2027-07-18T09:30:00\",\n  \"price\": 4500.50,\n  \"seatsAvailable\": 120,\n  \"duration\": 180\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/flightservice/api/flight/airline/inventory"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Flight",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromCityCode\": \"BLR\",\n    \"toCityCode\":\"BOM\",\n    \"date\" : \"2026-01-22\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/flightservice/api/flight/search"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking Service",
+			"item": [
+				{
+					"name": "Book ticket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Vinod Patel\",\n    \"email\": \"vishnuvaradhankr@gmail.com\",\n    \"gender\": \"MALE\"\n  },\n  \"scheduleId\": 2,\n  \"returnTripId\": null,\n  \"passengers\": [\n    {\n       \"name\": \"Ramesh Kumar\",\n       \"gender\": \"MALE\",\n       \"meal\": \"VEG\",\n       \"seatPos\": \"26C\"\n    },\n    {\n      \"name\": \"Anita Singh\",\n      \"gender\": \"FEMALE\",\n      \"meal\": \"NONVEG\",\n      \"seatPos\": \"26A\"\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9000/bookingservice/api/flight/booking/3"
+					},
+					"response": []
+				},
+				{
+					"name": "Search by pnr",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:9000/bookingservice/api/flight/ticket/PNR17645920003131"
+					},
+					"response": []
+				},
+				{
+					"name": "Get details using email",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:9000/bookingservice/api/flight/booking/history/vishnuvaradhankr@gmail.com"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel a ticket",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:9000/bookingservice/api/flight/booking/cancel/PNR17652145577391"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "singin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"roy\",\n    \"email\":  \"roy@gmail.com\",\n    \"password\": \"TheStrongestPassword1222231321@@@@\"\n//   \"role\": [\"ROLE_USER\"]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:9000/authservice/api/auth/signin"
+			},
+			"response": []
+		},
+		{
+			"name": "singup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"username\": \"1ookokek\",\n    \"email\":  \"1oke@gmail.com\",\n    \"password\": \"TheStrongestPassword1222231321@@@@\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:9000/authservice/api/auth/signup"
+			},
+			"response": []
+		},
+		{
+			"name": "signout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"vishnfu77varadhankr\",\n  \"password\": \"TheStrongestPassword1222231321@@@@\"\n//   \"role\": [\"ROLE_USER\"]\n}\n"
+				},
+				"url": "http://localhost:9000/authservice/api/auth/signout"
+			},
+			"response": []
+		},
+		{
+			"name": "user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb3kiLCJpYXQiOjE3NjUyMTQyMzIsImV4cCI6MTc2NTIxNzgzMn0.n2AIAaKtcEO6gjC-Vm5ZiwnJ_F4IUOxV6H5Z4ADKS4A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"vishnfu77varadhankr\",\n  \"password\": \"TheStrongestPassword1222231321@@@@\"\n//   \"role\": [\"ROLE_USER\"]\n}\n"
+				},
+				"url": "http://localhost:9000/authservice/api/test/user"
+			},
+			"response": []
+		}
+	]
+}
