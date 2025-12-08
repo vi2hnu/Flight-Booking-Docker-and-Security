@@ -30,7 +30,7 @@
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
+|| Method | Endpoint | Description |
 |--------|---------|-------------|
 | POST   | /api/flight/airline/inventory | Add inventory/schedule for an existing airline |
 | POST   | /api/flight/search | Search for available flights |
@@ -38,40 +38,41 @@
 | GET    | /api/flight/ticket/{pnr} | Get booked ticket details using PNR |
 | GET    | /api/flight/booking/history/{emailId} | Get booked ticket history by email ID |
 | DELETE | /api/flight/booking/cancel/{pnr} | Cancel a booked ticket using PNR |
-
+| POST   | /api/auth/signup | Register a new user in AuthService |
+| POST   | /api/auth/signin | Authenticate a user and get JWT |
 
 ---
 ## Eureka Dashboard:
-<img width="1920" height="928" alt="Image" src="https://github.com/user-attachments/assets/ef965681-a369-45c4-b1f8-8fd2edc6f19c" />
+<img width="1919" height="889" alt="Image" src="https://github.com/user-attachments/assets/debd87e6-9d6c-4df1-8e6a-f23e68eba355" />
 
 ---
-
+## Docker Containers
+<img width="1919" height="820" alt="Image" src="https://github.com/user-attachments/assets/0b2be17e-046c-4051-ab29-741a6d5d452c" />
+(note: docker logs can be found in main root directory)
 ---
 ## Reports:
 ### SonarQube Report
 (note: sonarqube link for each service has been provided in REPORT.docx)
-<img width="1383" height="224" alt="Image" src="https://github.com/user-attachments/assets/50268fd8-baef-4ef2-aeec-430fc8faf75c" />
-<img width="1379" height="225" alt="Image" src="https://github.com/user-attachments/assets/2478c71a-7a83-499d-a20c-097cde820405" />
-<img width="1389" height="223" alt="Image" src="https://github.com/user-attachments/assets/d0aa2b71-dfff-4c29-8516-5ec0a3b053c4" />
-
+<img width="1381" height="699" alt="Image" src="https://github.com/user-attachments/assets/bbe008f8-d9e5-4f7a-8aac-417af8d3b952" />
 ---
 
 ### Jacoco Report
-<img width="1657" height="328" alt="Image" src="https://github.com/user-attachments/assets/f9e088ad-6908-4961-9fb3-fb22b8569bcb" />
-<img width="1602" height="307" alt="Image" src="https://github.com/user-attachments/assets/0528d409-9fa4-4237-9bc9-3d234dedb429" />
-<img width="1541" height="272" alt="Image" src="https://github.com/user-attachments/assets/1c994f76-d239-4f25-9c99-70893fe05134" />
+<img width="1569" height="395" alt="Image" src="https://github.com/user-attachments/assets/793849c2-d7cc-4362-b588-796152634ad4" />
+<img width="1562" height="294" alt="Image" src="https://github.com/user-attachments/assets/76cb542d-31e5-4757-af1b-b87b884d9139" />
+<img width="1542" height="342" alt="Image" src="https://github.com/user-attachments/assets/b4361319-cd5b-4cc9-8f3a-ad7fd1384db7" />
+<img width="1511" height="417" alt="Image" src="https://github.com/user-attachments/assets/2dc4dcb2-161c-450a-82df-2be9de37f3da" />
 
 ---
 ### Jmeter Report
 (note: cli testing mode can be found in REPORT.docx)
 #### 20 Request
-<img width="1920" height="503" alt="Image" src="https://github.com/user-attachments/assets/bf0851db-2f03-464d-af9d-193b20ccb39d" />
+<img width="1450" height="291" alt="Image" src="https://github.com/user-attachments/assets/6fc089bc-59bf-4e4b-9c9a-3e3f89c2d68f" />
 
 #### 50 Request
-<img width="1919" height="507" alt="Image" src="https://github.com/user-attachments/assets/c32b9384-4c58-4b5a-a132-2e3b4efd5369" />
+<img width="1447" height="293" alt="Image" src="https://github.com/user-attachments/assets/be8aebb3-b085-4469-a8a4-19fafda676f8" />
 
 #### 100 Request
-<img width="1920" height="592" alt="Image" src="https://github.com/user-attachments/assets/df1f3028-6f50-41b2-8a2f-29f0f3ba3208" />
+<img width="1455" height="296" alt="Image" src="https://github.com/user-attachments/assets/378e8cdf-4f32-4993-900a-6a264fbbe2d9" />
 
 ---
 ### Newman
