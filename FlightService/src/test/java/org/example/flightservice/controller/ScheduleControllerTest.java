@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -75,4 +76,42 @@ class ScheduleControllerTest {
 
         verify(scheduleService).checkSeats(1L, seatsDTO);
     }
+
+    @Test
+    void reserveSeats_success() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(scheduleController).build();
+
+        SeatsDTO seatsDTO = new SeatsDTO(List.of("1A", "1B"));
+        when(scheduleService.reserveSeats(1L, seatsDTO)).thenReturn(true);
+
+        String jsonBody = """
+            {"seats":["1A","1B"]}
+            """;
+
+        mockMvc.perform(post("/api/schedule/reserve/seats/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+        verify(scheduleService).reserveSeats(1L, seatsDTO);
+    }
+
+    @Test
+    void deleteSeats_success() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(scheduleController).build();
+
+        SeatsDTO seatsDTO = new SeatsDTO(List.of("1A", "1B"));
+        String jsonBody = """
+            {"seats":["1A","1B"]}
+            """;
+
+        mockMvc.perform(delete("/api/schedule/delete/seats/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonBody))
+                .andExpect(status().isOk());
+
+        verify(scheduleService).deleteSeats(1L, seatsDTO);
+    }
+
 }

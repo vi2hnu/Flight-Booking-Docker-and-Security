@@ -5,18 +5,27 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class GlobalExceptionHandlerTest {
+    private final GlobalExceptionHandler handler = new GlobalExceptionHandler();
 
     public static class TestDto {
         @NotBlank(message = "Name is required")
@@ -186,5 +195,19 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/generic"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("generic"));
+    }
+
+    @Test
+    void testGlobalErrorBranch() throws Exception {
+        Object target = new Object();
+
+        BindingResult bindingResult = new BeanPropertyBindingResult(target, "target");
+        bindingResult.addError(new ObjectError("object", "This is a global error"));
+
+        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
+
+        ResponseEntity<Map<String, String>> response = handler.handleValidationException(ex);
+
+        assertEquals("This is a global error", response.getBody().get("globalError"));
     }
 }

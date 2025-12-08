@@ -67,11 +67,6 @@ public class ScheduleService implements ScheduleInterface {
         }
         log.info("locked {}",lockKey);
 
-        if(schedule == null){
-            log.error(scheduleNotFound,scheduleId);
-            throw new ScheduleNotFoundException("Schedule not found: "+scheduleId);
-        }
-
         if(checkSeats(scheduleId,seatsDTO)){
             return false;
         }

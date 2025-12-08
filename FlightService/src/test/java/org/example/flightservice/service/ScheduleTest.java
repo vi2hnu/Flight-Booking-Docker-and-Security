@@ -16,6 +16,7 @@ import org.redisson.api.RedissonClient;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -111,5 +112,31 @@ class ScheduleTest {
         scheduleService.addSeats(1L, 5);
 
         verify(scheduleRepository, times(1)).save(schedule);
+    }
+
+    @Test
+    void reserveSeats_ReturnsFalseWhenLockNotAcquired() {
+        Schedule schedule = new Schedule();
+        schedule.setId(1L);
+        SeatsDTO seatsDTO = new SeatsDTO(List.of("1A"));
+
+        when(scheduleRepository.findScheduleById(1L)).thenReturn(schedule);
+        when(redissonClient.getLock(anyString())).thenReturn(rLock);
+        when(rLock.tryLock()).thenReturn(false);
+
+        boolean result = scheduleService.reserveSeats(1L, seatsDTO);
+        assertFalse(result);
+        verify(bookedSeatsRepository, never()).save(any());
+    }
+
+    @Test
+    void reserveSeats_ThrowsExceptionWhenScheduleNullAfterLock() {
+        SeatsDTO seatsDTO = new SeatsDTO(List.of("1A"));
+
+        lenient().when(scheduleRepository.findScheduleById(1L)).thenReturn(null);
+        lenient().when(redissonClient.getLock(anyString())).thenReturn(rLock);
+        lenient().when(rLock.tryLock()).thenReturn(true);
+
+        assertThrows(ScheduleNotFoundException.class, () -> scheduleService.reserveSeats(1L, seatsDTO));
     }
 }
