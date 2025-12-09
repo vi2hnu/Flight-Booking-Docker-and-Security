@@ -14,6 +14,12 @@
 - **Independent scalability** allowing each service to scale based on its own load
 ---
 
+## Steps To Run Application
+1) Ensure docker is installed
+2) Ensure jar of respective applications are present in the target file
+3) Run ```mvn package``` in every service to ensure latest image gets build
+4) run docker compose up in root directory
+
 ## Architecture Diagram
 <img width="1745" height="943" alt="Image" src="https://github.com/user-attachments/assets/1d45a939-1907-4252-80d4-3b999f6764ab" />
 
