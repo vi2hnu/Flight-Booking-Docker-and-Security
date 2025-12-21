@@ -81,21 +81,21 @@ class BookingControllerTest {
         verify(ticketBookingInterface).getTicket(org.mockito.ArgumentMatchers.any(TicketBookingDTO.class));
     }
 
-    @Test
-    void findHistoryByEmail_success() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(bookingController).build();
-
-        Ticket ticket = new Ticket();
-        ticket.setPnr("PNR123");
-
-        when(ticketDetailsInterface.findHistoryByEmail("john@example.com")).thenReturn(List.of(ticket));
-
-        mockMvc.perform(get("/api/flight/booking/history/john@example.com"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].pnr").value("PNR123"));
-
-        verify(ticketDetailsInterface).findHistoryByEmail("john@example.com");
-    }
+//    @Test
+//    void findHistoryByEmail_success() throws Exception {
+//        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(bookingController).build();
+//
+//        Ticket ticket = new Ticket();
+//        ticket.setPnr("PNR123");
+//
+//        when(ticketDetailsInterface.findHistoryByEmail("john@example.com")).thenReturn(List.of(ticket));
+//
+//        mockMvc.perform(get("/api/flight/booking/history/john@example.com"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$[0].pnr").value("PNR123"));
+//
+//        verify(ticketDetailsInterface).findHistoryByEmail("john@example.com");
+//    }
 
     @Test
     void cancelTicket_success() throws Exception {

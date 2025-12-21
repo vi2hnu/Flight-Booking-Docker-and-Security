@@ -41,7 +41,7 @@ public class TicketBookingService implements TicketBookingInterface {
         if(user==null){
             throw new UsersNotFoundException("User not found");
         }
-
+        ticketDTO.user().setEmail(user.getEmail());
         ScheduleDTO outbound = flightClient.getSchedule(ticketDTO.scheduleId());
 
         if (outbound == null) {

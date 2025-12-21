@@ -16,7 +16,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@EnableCaching
 public class SearchService implements SearchInterface {
 
     private final ScheduleRepository scheduleRepository;
@@ -28,7 +27,6 @@ public class SearchService implements SearchInterface {
     }
 
     @Override
-    @Cacheable("Schedules")
     public List<Schedule> search(SearchQueryDTO searchQueryDTO) {
 
         City fromCity = cityRepository.findCityByAirportCode(searchQueryDTO.fromCityCode());

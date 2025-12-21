@@ -27,26 +27,27 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             if (validator.isSecure.test(exchange.getRequest())) {
-                if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                    return onError(exchange, "Missing Authorization Header", HttpStatus.UNAUTHORIZED);
-                }
 
-                String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-                if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    authHeader = authHeader.substring(7);
-                } else {
-                    return onError(exchange, "Invalid Header Format", HttpStatus.UNAUTHORIZED);
+                String token = exchange.getRequest()
+                        .getCookies()
+                        .getFirst("cookie") != null
+                        ? exchange.getRequest().getCookies().getFirst("cookie").getValue()
+                        : null;
+
+                if (token == null) {
+                    return onError(exchange, "Missing JWT Cookie", HttpStatus.UNAUTHORIZED);
                 }
 
                 try {
-                    jwtUtil.validateToken(authHeader);
+                    jwtUtil.validateToken(token);
                 } catch (Exception e) {
-                    return onError(exchange, "Invalid Token Access", HttpStatus.UNAUTHORIZED);
+                    return onError(exchange, "Invalid Token", HttpStatus.UNAUTHORIZED);
                 }
             }
             return chain.filter(exchange);
         };
     }
+
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
         exchange.getResponse().setStatusCode(httpStatus);

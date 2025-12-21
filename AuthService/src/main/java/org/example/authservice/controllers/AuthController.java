@@ -2,10 +2,7 @@ package org.example.authservice.controllers;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.example.authservice.dto.LoginDTO;
-import org.example.authservice.dto.MessageResponse;
-import org.example.authservice.dto.SignupDTO;
-import org.example.authservice.dto.UserInfoResponse;
+import org.example.authservice.dto.*;
 import org.example.authservice.model.entity.Role;
 import org.example.authservice.model.entity.Users;
 import org.example.authservice.model.enums.eRole;
@@ -29,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,9 +50,9 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/signIn") //I should be capital
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginRequest) {
-
+        //should be in service layer (auth service)
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
 
@@ -131,5 +129,14 @@ public class AuthController {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResponse("You've been signed out!"));
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<Users> getUser(@RequestBody GetUserDTO dto) {
+        log.info(dto.username());
+        Users user = userRepository.findUsersByUsername(dto.username());
+        log.info(user.toString());
+        user.setPassword("");
+        return ResponseEntity.ok(user);
     }
 }

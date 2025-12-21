@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.bookingservice.dto.TicketBookingDTO;
+import org.example.bookingservice.dto.TicketDTO;
 import org.example.bookingservice.model.entity.Ticket;
 import org.example.bookingservice.service.TicketBookingInterface;
 import org.example.bookingservice.service.TicketDetailsInterface;
@@ -35,7 +36,7 @@ public class BookingController {
     }
 
     @GetMapping("history/{emailId:.+}")
-    public ResponseEntity<List<Ticket>> findHistoryByEmail(@PathVariable String emailId) {
+    public ResponseEntity<List<TicketDTO>> findHistoryByEmail(@PathVariable String emailId) {
         return ResponseEntity.status(HttpStatus.OK).body(ticketDetailsInterface.findHistoryByEmail(emailId));
     }
 

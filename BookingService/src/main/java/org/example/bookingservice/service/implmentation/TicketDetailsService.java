@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@EnableCaching
 public class TicketDetailsService implements TicketDetailsInterface {
 
     private final TicketRepository ticketRepository;
@@ -55,15 +54,30 @@ public class TicketDetailsService implements TicketDetailsInterface {
         return ticket;
     }
 
-    @Cacheable("email")
     @Override
-    public List<Ticket> findHistoryByEmail(String email) {
+    public List<TicketDTO> findHistoryByEmail(String email) {
         Users user = usersRepository.findByEmail(email);
         if(user==null){
             log.error("User not found: {}",email);
             throw new UsersNotFoundException("User Not Found");
         }
-        return ticketRepository.findAllByBookedByUsers_Id(user.getId());
+        List<Ticket> tickets =  ticketRepository.findAllByBookedByUsers_Id(user.getId());
+        List<TicketDTO> result = new ArrayList<>();
+        tickets.stream()
+                .forEach(ticket ->{
+                    ScheduleDTO schedule = flightClient.getSchedule(ticket.getScheduleId());
+                    TicketDTO dto = new TicketDTO(
+                            ticket.getPnr(),
+                            ticket.getBookedByUsers(),
+                            ticket.getPassengers(),
+                            ticket.getStatus(),
+                            schedule.fromCityId(),
+                            schedule.toCityId(),
+                            schedule.departureDate(),
+                            schedule.departureTime());
+                    result.add(dto);
+                });
+        return result;
     }
 
     @Override
