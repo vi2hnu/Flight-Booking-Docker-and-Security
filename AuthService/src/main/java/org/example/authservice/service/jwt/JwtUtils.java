@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.example.authservice.model.entity.Users;
 import org.example.authservice.service.user.UserDetailsImpl;
 import org.example.authservice.service.user.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,12 +82,14 @@ public class JwtUtils {
     }
 
     public String generateTokenFromUsername(String username) {
+        Users user = userDetailsServiceImpl.getUserDetails(username);
         log.info("{}",jwtExpirationMs);
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
+                .claim("Role", user.getRoles())
                 .compact();
     }
 }

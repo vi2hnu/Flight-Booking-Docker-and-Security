@@ -30,4 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return UserDetailsImpl.build(user);
     }
 
+    public Users getUserDetails(String username){
+        return usersRepository.findUsersByUsername(username);
+    }
 }
