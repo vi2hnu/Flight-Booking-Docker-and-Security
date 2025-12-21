@@ -6,4 +6,4 @@ COPY target/BookingService-0.0.1-SNAPSHOT.jar /app/BookingService-0.0.1-SNAPSHOT
 
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "BookingService-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "BookingService-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=docker"]

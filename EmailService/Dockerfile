@@ -6,4 +6,4 @@ COPY target/EmailService-0.0.1-SNAPSHOT.jar /app/EmailService-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8082
 
-ENTRYPOINT ["java", "-jar", "EmailService-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "EmailService-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=docker"]

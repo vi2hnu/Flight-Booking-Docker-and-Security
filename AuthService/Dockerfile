@@ -6,4 +6,4 @@ COPY /target/AuthService-0.0.1-SNAPSHOT.jar /app/AuthService-0.0.1-SNAPSHOT.jar
 
 EXPOSE 9091
 
-ENTRYPOINT ["java","-jar","AuthService-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","AuthService-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=docker"]

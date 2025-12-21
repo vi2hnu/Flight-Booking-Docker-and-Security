@@ -33,6 +33,7 @@ services:
   kafkaQueue:
     image: apache/kafka:4.1.1
     container_name: kafkaQueue
+    hostname: kafkaQueue
     ports:
       - "9092:9092"
     environment:
