@@ -139,4 +139,21 @@ public class AuthController {
         user.setPassword("");
         return ResponseEntity.ok(user);
     }
+
+    @PostMapping("/change/password")
+    public ResponseEntity<MessageResponse> changePassword(@RequestBody ChangePasswordDTO request){
+        log.info("request for change : {}" ,request);
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.oldPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        Users user = userRepository.findUsersByUsername(request.username());
+        user.setPassword(encoder.encode(request.newPassword()));
+        log.info("after change : {}" ,user);
+        userRepository.save(user);
+        return ResponseEntity.ok(new MessageResponse("User password has been changed. Please login again"));
+    }
 }
