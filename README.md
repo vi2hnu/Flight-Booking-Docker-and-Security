@@ -1,5 +1,22 @@
 # Flight Booking Microservice
 
+## Steps To Run Application
+### With Docker
+1) Ensure docker is installed
+2) Ensure jar of respective applications are present in the target file
+3) Run ```mvn package``` in every service to ensure latest image gets build
+4) run ```docker compose up``` in root directory
+
+### Without Docker (locally)
+(NOTE: this application was developed on linux hence bash script is present instead of cmd file. **If you wish to run this application in windows please use docker.
+If you want to run this in windows locally without docker use Windows WSI**)
+1) Ensure jar of respective applications are present in the target file
+2) run ```bash script.sh``` in root directory
+
+---
+## Frontend Repository
+Link = https://github.com/vi2hnu/Flight-Booking-Frontend-Login-Search
+
 ## Architecture & System Features
 
 - **Real-time email notifications** triggered during booking, cancellation, and addition of flights in inventory
@@ -12,13 +29,9 @@
 - **Redis caching** to improve response times, reduce database load, and store frequently accessed data such as flight availability and session information
 - **Docker containerization** for packaging each microservice with its dependencies, enabling consistent deployment and easy orchestration
 - **Independent scalability** allowing each service to scale based on its own load
+- **Different profiles** allows users to either run the application using docker or locally using script automations
 ---
 
-## Steps To Run Application
-1) Ensure docker is installed
-2) Ensure jar of respective applications are present in the target file
-3) Run ```mvn package``` in every service to ensure latest image gets build
-4) run docker compose up in root directory
 
 ## Architecture Diagram
 <img width="1745" height="943" alt="Image" src="https://github.com/user-attachments/assets/1d45a939-1907-4252-80d4-3b999f6764ab" />
@@ -36,16 +49,17 @@
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|---------|-------------|
-| POST   | /api/flight/airline/inventory | Add inventory/schedule for an existing airline |
-| POST   | /api/flight/search | Search for available flights |
-| POST   | /api/flight/booking/{flightId} | Book a ticket for a flight |
-| GET    | /api/flight/ticket/{pnr} | Get booked ticket details using PNR |
-| GET    | /api/flight/booking/history/{emailId} | Get booked ticket history by email ID |
-| DELETE | /api/flight/booking/cancel/{pnr} | Cancel a booked ticket using PNR |
-| POST   | /api/auth/signup | Register a new user in AuthService |
-| POST   | /api/auth/signin | Authenticate a user and get JWT |
+| Method | Endpoint                              | Description                                   |
+|--------|---------------------------------------|-----------------------------------------------|
+| POST   | /api/flight/airline/inventory         | Add inventory/schedule for an existing airline |
+| POST   | /api/flight/search                    | Search for available flights                  |
+| POST   | /api/flight/booking/{flightId}        | Book a ticket for a flight                    |
+| GET    | /api/flight/ticket/{pnr}              | Get booked ticket details using PNR           |
+| GET    | /api/flight/booking/history/{emailId} | Get booked ticket history by email ID         |
+| DELETE | /api/flight/booking/cancel/{pnr}      | Cancel a booked ticket using PNR              |
+| POST   | /api/auth/signup                      | Register a new user in AuthService            |
+| POST   | /api/auth/signin                      | Authenticate a user and get JWT               |
+| POST   | /api/auth/change/password             | Change password of a user                     |
 
 ---
 ## Eureka Dashboard:
