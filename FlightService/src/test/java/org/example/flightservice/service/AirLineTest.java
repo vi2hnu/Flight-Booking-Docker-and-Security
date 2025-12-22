@@ -106,17 +106,17 @@ class AirLineTest {
 
         Schedule existingSchedule = new Schedule();
         existingSchedule.setFlight(flight);
-        existingSchedule.setDepartureTime(LocalDateTime.of(2025, 12, 15, 10, 0));
+        existingSchedule.setDepartureTime(LocalDateTime.of(2026, 12, 15, 10, 0));
         existingSchedule.setDuration(120);
-        existingSchedule.setDepartureDate(LocalDateTime.of(2025, 12, 15, 0, 0).toLocalDate());
+        existingSchedule.setDepartureDate(LocalDateTime.of(2026, 12, 15, 0, 0).toLocalDate());
 
         Schedule newSchedule = new Schedule();
         newSchedule.setFlight(flight);
         newSchedule.setFromCity(fromCity);
         newSchedule.setToCity(toCity);
-        newSchedule.setDepartureTime(LocalDateTime.of(2025, 12, 15, 11, 0));
+        newSchedule.setDepartureTime(LocalDateTime.of(2026, 12, 15, 11, 0));
         newSchedule.setDuration(90);
-        newSchedule.setDepartureDate(LocalDateTime.of(2025, 12, 15, 0, 0).toLocalDate());
+        newSchedule.setDepartureDate(LocalDateTime.of(2026, 12, 15, 0, 0).toLocalDate());
         newSchedule.setPrice(500);
 
         ScheduleDTO scheduleDTO = new ScheduleDTO(newSchedule);
@@ -126,7 +126,7 @@ class AirLineTest {
         when(cityRepository.findCitiesById(2L)).thenReturn(toCity);
         when(scheduleRepository.findByFlight_IdAndDepartureDate(
                 1L,
-                LocalDateTime.of(2025, 12, 15, 0, 0).toLocalDate()
+                LocalDateTime.of(2026, 12, 15, 0, 0).toLocalDate()
         )).thenReturn(List.of(existingSchedule));
 
         assertThrows(ScheduleConflictException.class, () -> airLineService.addSchedule(scheduleDTO));
