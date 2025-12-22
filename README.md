@@ -69,6 +69,7 @@ Link = https://github.com/vi2hnu/Flight-Booking-Frontend-Login-Search
 ## Docker Containers
 <img width="1919" height="820" alt="Image" src="https://github.com/user-attachments/assets/0b2be17e-046c-4051-ab29-741a6d5d452c" />
 (note: docker logs can be found in main root directory)
+
 ---
 
 ## Reports:
@@ -81,7 +82,6 @@ Link = https://github.com/vi2hnu/Flight-Booking-Frontend-Login-Search
 <img width="1569" height="395" alt="Image" src="https://github.com/user-attachments/assets/793849c2-d7cc-4362-b588-796152634ad4" />
 <img width="1562" height="294" alt="Image" src="https://github.com/user-attachments/assets/76cb542d-31e5-4757-af1b-b87b884d9139" />
 <img width="1542" height="342" alt="Image" src="https://github.com/user-attachments/assets/b4361319-cd5b-4cc9-8f3a-ad7fd1384db7" />
-<img width="1511" height="417" alt="Image" src="https://github.com/user-attachments/assets/2dc4dcb2-161c-450a-82df-2be9de37f3da" />
 
 ---
 ### Jmeter Report
