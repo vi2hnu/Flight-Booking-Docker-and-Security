@@ -17,6 +17,19 @@ If you want to run this in windows locally without docker use Windows WSI**)
 ## Frontend Repository
 Link = https://github.com/vi2hnu/Flight-Booking-Frontend-Login-Search
 
+---
+
+## New changes as of 23.12.2025
+- **Different profiles** allows users to either run the application using docker or locally using script automations
+- **Automation** using script.sh to run all services
+- **RBAC** done in api gateway to restrict users based on claims in their jwt token
+- **Password Change** feature for users to change their passwords
+- **Optimised docker** to ensure faster build time
+
+(Note: all changes can be found in REPORT.docx or REPORT.pdf)
+
+---
+
 ## Architecture & System Features
 
 - **Real-time email notifications** triggered during booking, cancellation, and addition of flights in inventory
@@ -29,7 +42,6 @@ Link = https://github.com/vi2hnu/Flight-Booking-Frontend-Login-Search
 - **Redis caching** to improve response times, reduce database load, and store frequently accessed data such as flight availability and session information
 - **Docker containerization** for packaging each microservice with its dependencies, enabling consistent deployment and easy orchestration
 - **Independent scalability** allowing each service to scale based on its own load
-- **Different profiles** allows users to either run the application using docker or locally using script automations
 ---
 
 
