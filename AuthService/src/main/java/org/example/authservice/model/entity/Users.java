@@ -4,6 +4,7 @@ package org.example.authservice.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ public class Users {
     String username;
     String password;
     String email;
+    Date passwordCreatedAt;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
              joinColumns = @JoinColumn(name = "user_id"),
@@ -29,10 +31,11 @@ public class Users {
     Set<Role> roles = new HashSet<>();
 
 
-    public Users(String username, String email, String password) {
+    public Users(String username, String email, String password,Date passwordCreatedAt) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.passwordCreatedAt = passwordCreatedAt;
     }
 
     public Users() {

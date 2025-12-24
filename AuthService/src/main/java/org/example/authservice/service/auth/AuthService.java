@@ -17,9 +17,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -58,10 +60,25 @@ public class AuthService {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        boolean changePassword = true;
+
+        if(userDetails.getPasswordCreatedAt()==null){
+            return new AuthResult(jwtCookie,new UserInfoResponse(userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles,changePassword));
+        }
+        //checking the date for last password change;
+        long diff = new Date().getTime() - userDetails.getPasswordCreatedAt().getTime();
+
+        if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)<90){
+            changePassword = false;
+        }
+
         return new AuthResult(jwtCookie,new UserInfoResponse(userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles,changePassword));
     }
 
     public boolean signUp(SignupDTO signUpRequest){
@@ -73,7 +90,7 @@ public class AuthService {
         // Create new user's account
         Users user = new Users(signUpRequest.username(),
                 signUpRequest.email(),
-                encoder.encode(signUpRequest.password()));
+                encoder.encode(signUpRequest.password()),new Date());
 
         Set<String> strRoles = signUpRequest.role();
         Set<Role> roles = new HashSet<>();
@@ -124,6 +141,7 @@ public class AuthService {
 
         Users user = userRepository.findUsersByUsername(request.username());
         user.setPassword(encoder.encode(request.newPassword()));
+        user.setPasswordCreatedAt(new Date());
         userRepository.save(user);
     }
 }
