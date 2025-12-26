@@ -1,10 +1,13 @@
 package org.example.flightservice.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.flightservice.dto.SearchDTO;
 import org.example.flightservice.dto.SearchQueryDTO;
 import org.example.flightservice.exception.CityNotFoundException;
+import org.example.flightservice.model.entity.BookedSeats;
 import org.example.flightservice.model.entity.City;
 import org.example.flightservice.model.entity.Schedule;
+import org.example.flightservice.repository.BookedSeatsRepository;
 import org.example.flightservice.repository.CityRepository;
 import org.example.flightservice.repository.ScheduleRepository;
 import org.example.flightservice.service.SearchInterface;
@@ -12,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -20,14 +24,16 @@ public class SearchService implements SearchInterface {
 
     private final ScheduleRepository scheduleRepository;
     private final CityRepository cityRepository;
+    private final BookedSeatsRepository bookedSeatsRepository;
 
-    public SearchService(ScheduleRepository scheduleRepository, CityRepository cityRepository) {
+    public SearchService(ScheduleRepository scheduleRepository, CityRepository cityRepository, BookedSeatsRepository bookedSeatsRepository) {
         this.scheduleRepository = scheduleRepository;
         this.cityRepository = cityRepository;
+        this.bookedSeatsRepository = bookedSeatsRepository;
     }
 
     @Override
-    public List<Schedule> search(SearchQueryDTO searchQueryDTO) {
+    public List<SearchDTO> search(SearchQueryDTO searchQueryDTO) {
 
         City fromCity = cityRepository.findCityByAirportCode(searchQueryDTO.fromCityCode());
 
@@ -43,7 +49,16 @@ public class SearchService implements SearchInterface {
              log.error("City not found: {}",searchQueryDTO.toCityCode());
             throw new CityNotFoundException("City not found: " + searchQueryDTO.toCityCode());
         }
+        List<SearchDTO> result = new ArrayList<>();
+        List<Schedule> schedules =  scheduleRepository.findByDepartureDateAndFromCityAndToCity(searchQueryDTO.date(), fromCity, toCity);
 
-        return scheduleRepository.findByDepartureDateAndFromCityAndToCity(searchQueryDTO.date(), fromCity, toCity);
+        schedules.forEach(schedule -> {
+            List<BookedSeats> bookedSeats = bookedSeatsRepository.findBySchedule(schedule);
+            List<String> seats = bookedSeats.stream()
+                    .map(BookedSeats::getSeatPos)
+                    .toList();
+            result.add(new SearchDTO(schedule, seats));
+        });
+        return result;
     }
 }

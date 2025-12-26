@@ -14,7 +14,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
@@ -41,7 +40,6 @@ public class ScheduleService implements ScheduleInterface {
            log.error(scheduleNotFound,scheduleId);
            throw new ScheduleNotFoundException("Schedule not found: "+scheduleId);
        }
-       log.info(new ScheduleDTO(schedule).toString());
        return new ScheduleDTO(schedule);
     }
 

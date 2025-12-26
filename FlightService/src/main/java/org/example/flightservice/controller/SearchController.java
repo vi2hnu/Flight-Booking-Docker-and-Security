@@ -1,6 +1,7 @@
 package org.example.flightservice.controller;
 
 import jakarta.validation.Valid;
+import org.example.flightservice.dto.SearchDTO;
 import org.example.flightservice.dto.SearchQueryDTO;
 import org.example.flightservice.model.entity.Schedule;
 import org.example.flightservice.service.SearchInterface;
@@ -24,7 +25,7 @@ public class SearchController {
     }
 
     @PostMapping()
-    public ResponseEntity<List<Schedule>> search(@Valid @RequestBody SearchQueryDTO searchQueryDTO) {
+    public ResponseEntity<List<SearchDTO>> search(@Valid @RequestBody SearchQueryDTO searchQueryDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(searchInterface.search(searchQueryDTO));
     }
 }

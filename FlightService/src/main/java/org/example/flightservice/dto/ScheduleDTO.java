@@ -32,6 +32,7 @@ public record ScheduleDTO (
 
         @NotNull
         Integer duration
+
 ) implements Serializable {
     public ScheduleDTO(Schedule s){
         this(

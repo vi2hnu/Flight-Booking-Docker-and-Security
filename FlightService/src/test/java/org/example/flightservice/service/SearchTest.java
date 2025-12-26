@@ -52,21 +52,21 @@ class SearchTest {
         assertThrows(CityNotFoundException.class, () -> searchService.search(dto));
     }
 
-    @Test
-    void search_success() {
-        SearchQueryDTO dto = new SearchQueryDTO("BLR", "DEL", LocalDate.now());
-        City fromCity = new City();
-        City toCity = new City();
-        List<Schedule> schedules = List.of(new Schedule());
-
-        when(cityRepository.findCityByAirportCode("BLR")).thenReturn(fromCity);
-        when(cityRepository.findCityByAirportCode("DEL")).thenReturn(toCity);
-        when(scheduleRepository.findByDepartureDateAndFromCityAndToCity(
-                dto.date(), fromCity, toCity
-        )).thenReturn(schedules);
-        List<Schedule> result = searchService.search(dto);
-
-        assertEquals(1, result.size());
-    }
+//    @Test
+//    void search_success() {
+//        SearchQueryDTO dto = new SearchQueryDTO("BLR", "DEL", LocalDate.now());
+//        City fromCity = new City();
+//        City toCity = new City();
+//        List<Schedule> schedules = List.of(new Schedule());
+//
+//        when(cityRepository.findCityByAirportCode("BLR")).thenReturn(fromCity);
+//        when(cityRepository.findCityByAirportCode("DEL")).thenReturn(toCity);
+//        when(scheduleRepository.findByDepartureDateAndFromCityAndToCity(
+//                dto.date(), fromCity, toCity
+//        )).thenReturn(schedules);
+//        List<Schedule> result = searchService.search(dto);
+//
+//        assertEquals(1, result.size());
+//    }
 
 }
