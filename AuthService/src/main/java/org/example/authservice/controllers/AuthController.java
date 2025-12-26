@@ -9,10 +9,12 @@ import org.example.authservice.service.jwt.JwtUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Slf4j
@@ -59,5 +61,14 @@ public class AuthController {
     public ResponseEntity<MessageResponse> changePassword(@RequestBody ChangePasswordDTO request){
         authService.changePassword(request);
         return ResponseEntity.ok(new MessageResponse("User password has been changed. Please login again"));
+    }
+
+    @GetMapping("/oauth2/success")
+    public Map<String,String> oauth2Success(@AuthenticationPrincipal OAuth2User oauth2User) {
+        String token = (String) oauth2User.getAttribute("token");
+        Map<String,String> response = new HashMap<>();
+        response.put("jwt", token);
+        response.put("email", oauth2User.getAttribute("email"));
+        return response;
     }
 }

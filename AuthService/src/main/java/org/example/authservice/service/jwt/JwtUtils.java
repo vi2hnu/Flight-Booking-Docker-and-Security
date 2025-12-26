@@ -50,6 +50,10 @@ public class JwtUtils {
         return cookie;
     }
 
+    public String getJwtToken(UserDetailsImpl userPrincipal){
+        return generateTokenFromUsername(userPrincipal.getUsername());
+    }
+
     public ResponseCookie getCleanJwtCookie() {
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/").build();
         return cookie;
