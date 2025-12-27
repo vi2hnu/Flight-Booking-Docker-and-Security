@@ -1,5 +1,6 @@
 //package org.example.flightservice.controller;
 //
+//import org.example.flightservice.dto.SearchDTO;
 //import org.example.flightservice.dto.SearchQueryDTO;
 //import org.example.flightservice.model.entity.Schedule;
 //import org.example.flightservice.service.SearchInterface;
@@ -13,6 +14,7 @@
 //import org.springframework.http.MediaType;
 //
 //import java.time.LocalDate;
+//import java.util.ArrayList;
 //import java.util.List;
 //
 //import static org.mockito.Mockito.when;
@@ -39,7 +41,7 @@
 //        Schedule schedule = new Schedule();
 //        schedule.setId(1L);
 //
-//        List<Schedule> result = List.of(schedule);
+//        List<SearchDTO> result = List.of(new SearchDTO(schedule,new ArrayList<String>()));
 //
 //        when(searchInterface.search(dto)).thenReturn(result);
 //
