@@ -1,18 +1,20 @@
 package org.example.authservice.service.user;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.example.authservice.model.entity.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
